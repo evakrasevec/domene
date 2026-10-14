@@ -72,16 +72,18 @@
   .note a { color: inherit; }
   h3 { font-size: 15px; margin: 0 0 14px; color: var(--muted); font-weight: 600; }
   ul.domains { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
-  ul.domains button {
+  ul.domains a {
+    display: inline-block; text-decoration: none;
     font: inherit; font-size: 15px; background: var(--chip); color: var(--text);
     border: 1px solid transparent; border-radius: 999px; padding: 6px 14px; cursor: pointer;
   }
-  ul.domains button:hover { border-color: var(--line); }
-  ul.domains button.current { background: var(--accent); color: var(--accent-text); }
+  ul.domains a:hover { border-color: var(--line); }
+  ul.domains a.current { background: var(--accent); color: var(--accent-text); }
   .buy { margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center; }
   .buy[hidden], .paid[hidden] { display: none; }
   .price { font-size: 30px; font-weight: 700; letter-spacing: -0.01em; }
   a.submit { text-decoration: none; display: inline-block; }
+  a.submit[hidden] { display: none; }
   .paid { background: var(--accent); color: var(--accent-text); border-radius: 12px; padding: 16px 20px; margin: 0 0 24px; }
   footer { margin-top: 56px; font-size: 13px; color: var(--muted); }
 </style>
@@ -98,13 +100,13 @@
 
   <main>
     <h1 id="domain">domena.si</h1>
-    <p class="lead" data-i18n="lead">Ta domena je naprodaj. Če vas zanima, nam pošljite ponudbo – odgovorimo v 48 urah.</p>
+    <p class="lead" id="lead">Ta domena je naprodaj. Če vas zanima, nam pošljite ponudbo – odgovorimo v 48 urah.</p>
 
     <p class="paid" id="paid" hidden data-i18n="paid">Hvala za nakup! V kratkem vas kontaktiramo glede prenosa domene.</p>
     <section class="card buy" id="buy" hidden>
       <div>
         <div class="price" id="price"></div>
-        <p class="note" data-i18n="buyNote">Takojšen nakup s plačilno kartico. Po plačilu vas kontaktiramo in uredimo prenos domene.</p>
+        <p class="note" id="buyNote">Takojšen nakup s plačilno kartico. Po plačilu vas kontaktiramo in uredimo prenos domene.</p>
       </div>
       <a class="submit" id="payBtn" href="#" data-i18n="buyNow">Kupi s kartico</a>
     </section>
@@ -186,6 +188,9 @@
       others: "Na prodaj so tudi te domene",
       buyNote: "Takojšen nakup s plačilno kartico. Po plačilu vas kontaktiramo in uredimo prenos domene.",
       buyNow: "Kupi s kartico",
+      hubTitle: "Domene na prodaj",
+      hubLead: "Izberite domeno spodaj ali nam pošljite ponudbo.",
+      buyNoteOffer: "Za nakup ali nižjo ponudbo izpolnite obrazec spodaj. Prenos domene uredimo po plačilu.",
       paid: "Hvala za nakup! V kratkem vas kontaktiramo glede prenosa domene.",
       priceText: p => "Cena: " + p.toLocaleString("sl-SI") + " €",
       subject: d => "Ponudba za domeno " + d,
@@ -206,6 +211,9 @@
       others: "These domains are also for sale",
       buyNote: "Buy instantly by card. After payment we contact you to transfer the domain.",
       buyNow: "Buy by card",
+      hubTitle: "Domains for sale",
+      hubLead: "Pick a domain below or send us an offer.",
+      buyNoteOffer: "To buy or make an offer, use the form below. We transfer the domain after payment.",
       paid: "Thank you for your purchase! We will contact you shortly about the domain transfer.",
       priceText: p => "Price: €" + p.toLocaleString("en-GB"),
       subject: d => "Offer for domain " + d,
@@ -213,11 +221,17 @@
     }
   };
 
-  // Katera domena je obiskana: ?d=… (pri preusmeritvi) ali ime gostitelja.
+  // Katera domena je obiskana: pot (/agentwork.si), ?d=… ali ime gostitelja.
+  const segs = location.pathname.split("/").filter(x => x && x !== "index.html")
+                 .map(x => decodeURIComponent(x).toLowerCase());
+  const pathDomain = NAMES.includes(segs[segs.length - 1]) ? segs[segs.length - 1] : null;
+  // Osnovna pot strani brez domene, npr. "/" ali "/domene/".
+  const BASE = "/" + segs.slice(0, pathDomain ? -1 : undefined).map(x => x + "/").join("");
+
   function detectDomain() {
     const p = new URLSearchParams(location.search).get("d");
     const host = location.hostname.replace(/^www\./, "").toLowerCase();
-    const cand = (p || host).toLowerCase().replace(/^www\./, "");
+    const cand = (p || pathDomain || host).toLowerCase().replace(/^www\./, "");
     return NAMES.includes(cand) ? cand : null;
   }
 
@@ -235,20 +249,23 @@
     document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === lang));
 
     const shown = current || NAMES[0];
-    $("domain").textContent = current || t.tag;
-    document.title = current ? t.title(current) : t.tag;
+    $("domain").textContent = current || t.hubTitle;
+    $("lead").textContent = current ? t.lead : t.hubLead;
+    document.title = current ? t.title(current) : t.hubTitle;
     $("domainSelect").value = shown;
 
     $("list").innerHTML = "";
     NAMES.forEach(d => {
       const li = document.createElement("li");
-      const b = document.createElement("button");
-      b.type = "button";
+      const b = document.createElement("a");
+      b.href = BASE + d;
       b.textContent = d;
       if (d === current) b.className = "current";
-      b.onclick = () => {
+      b.onclick = e => {
+        if (location.protocol === "file:") return;
+        e.preventDefault();
         current = d;
-        history.replaceState(null, "", "?d=" + d);
+        history.pushState(null, "", BASE + d);
         render();
         window.scrollTo({ top: 0, behavior: "smooth" });
       };
@@ -259,7 +276,9 @@
     const d = info(shown);
     $("price").textContent = d.price ? t.priceText(d.price) : "";
     $("payBtn").href = d.pay || "#";
-    $("buy").hidden = !(current && d.price && d.pay) || !$("paid").hidden;
+    $("payBtn").hidden = !d.pay;
+    $("buyNote").textContent = d.pay ? t.buyNote : t.buyNoteOffer;
+    $("buy").hidden = !(current && d.price) || !$("paid").hidden;
 
     const mail = $("mail");
     mail.textContent = CONTACT_EMAIL;
@@ -286,6 +305,8 @@
 
   // Stripe po plačilu preusmeri na ?d=<domena>&placano=1
   if (new URLSearchParams(location.search).has("placano")) $("paid").hidden = false;
+
+  window.onpopstate = () => { current = detectDomain(); render(); };
 
   $("year").textContent = new Date().getFullYear();
   render();

@@ -4,6 +4,7 @@ Enotna stran »domena na prodaj« za vse naše `.si` domene. Ena sama statična 
 
 Stran sama prepozna, katera domena je bila obiskana, in jo prikaže v naslovu:
 
+- po poti, npr. `https://<vaš-naslov>/agentwork.si` (vsaka domena ima svojo podstran),
 - po imenu gostitelja (če vse domene kažejo na isto gostovanje), ali
 - po parametru `?d=` (če registrar domeno preusmeri, npr. `https://<ime>.replit.app/?d=agentwork.si`).
 
@@ -16,6 +17,15 @@ V `index.html` na vrhu skripte uredite:
 ```js
 const CONTACT_EMAIL = "info@digihelp.si";      // kam pridejo ponudbe
 const DOMAINS = [ ... ];                       // seznam domen
+```
+
+## Podstrani
+
+Za vsako domeno obstaja mapa `<domena>/index.html` (kopija `index.html`), da deluje naslov
+`https://<vaš-naslov>/agentwork.si`. Po vsaki spremembi `index.html` (cene, e-naslov, domene) zaženite:
+
+```
+python3 build.py
 ```
 
 ## Objava na Replitu
@@ -33,10 +43,10 @@ na Replit povežete samo eno domeno (npr. `<ime>.replit.app`),
 pri registrarju pa za vsako ostalo domeno nastavite preusmeritev (URL forwarding, 301) na:
 
 ```
-https://<vaš-naslov>/?d=<domena>
+https://<vaš-naslov>/<domena>
 ```
 
-npr. `https://<ime>.replit.app/?d=modelflow.si`. Stran bo prikazala `modelflow.si`.
+npr. `https://<ime>.replit.app/modelflow.si`. Stran bo prikazala `modelflow.si`.
 
 ## Cene in kartično plačilo (Stripe)
 
