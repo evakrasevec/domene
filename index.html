@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="sl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Domena na prodaj</title>
+<meta name="description" content="Ta domena je naprodaj. Pošljite ponudbo.">
+<meta name="robots" content="noindex">
+<style>
+  :root {
+    --bg: #f6f5f1;
+    --surface: #ffffff;
+    --text: #1c1b19;
+    --muted: #6b6860;
+    --line: #e3e0d8;
+    --accent: #2f5d50;
+    --accent-text: #ffffff;
+    --chip: #eeece5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141413;
+      --surface: #1d1d1b;
+      --text: #f0eee8;
+      --muted: #a29f96;
+      --line: #2e2d2a;
+      --accent: #7fb8a4;
+      --accent-text: #10201b;
+      --chip: #262523;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 48px 16px 64px; }
+  header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 56px; }
+  .tag { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .lang button {
+    background: none; border: 1px solid var(--line); color: var(--muted);
+    padding: 4px 10px; font: inherit; font-size: 13px; cursor: pointer; border-radius: 6px;
+  }
+  .lang button[aria-pressed="true"] { color: var(--text); border-color: var(--text); }
+  h1 {
+    font-size: clamp(36px, 9vw, 68px); line-height: 1.05; margin: 0 0 16px;
+    letter-spacing: -0.02em; word-break: break-word;
+  }
+  .lead { font-size: 19px; color: var(--muted); margin: 0 0 40px; max-width: 34em; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    padding: 24px; margin-bottom: 48px;
+  }
+  .card h2 { font-size: 18px; margin: 0 0 16px; }
+  form { display: grid; gap: 14px; }
+  .row { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 560px) { .row { grid-template-columns: 1fr; } }
+  label { display: grid; gap: 6px; font-size: 14px; color: var(--muted); }
+  input, select, textarea {
+    font: inherit; color: var(--text); background: var(--bg);
+    border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; width: 100%;
+  }
+  textarea { min-height: 96px; resize: vertical; }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .submit {
+    justify-self: start; background: var(--accent); color: var(--accent-text); border: 0;
+    border-radius: 8px; padding: 12px 22px; font: inherit; font-weight: 600; cursor: pointer;
+  }
+  .note { font-size: 13px; color: var(--muted); margin: 0; }
+  .note a { color: inherit; }
+  h3 { font-size: 15px; margin: 0 0 14px; color: var(--muted); font-weight: 600; }
+  ul.domains { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  ul.domains button {
+    font: inherit; font-size: 15px; background: var(--chip); color: var(--text);
+    border: 1px solid transparent; border-radius: 999px; padding: 6px 14px; cursor: pointer;
+  }
+  ul.domains button:hover { border-color: var(--line); }
+  ul.domains button.current { background: var(--accent); color: var(--accent-text); }
+  footer { margin-top: 56px; font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="tag" data-i18n="tag">Domena na prodaj</span>
+    <div class="lang" role="group" aria-label="Jezik / Language">
+      <button type="button" data-lang="sl">SL</button>
+      <button type="button" data-lang="en">EN</button>
+    </div>
+  </header>
+
+  <main>
+    <h1 id="domain">domena.si</h1>
+    <p class="lead" data-i18n="lead">Ta domena je naprodaj. Če vas zanima, nam pošljite ponudbo – odgovorimo v 48 urah.</p>
+
+    <section class="card">
+      <h2 data-i18n="formTitle">Pošljite ponudbo</h2>
+      <form id="offer">
+        <div class="row">
+          <label><span data-i18n="name">Ime in priimek / podjetje</span>
+            <input name="name" required autocomplete="name">
+          </label>
+          <label><span data-i18n="email">E-pošta</span>
+            <input name="email" type="email" required autocomplete="email">
+          </label>
+        </div>
+        <div class="row">
+          <label><span data-i18n="domainLabel">Domena</span>
+            <select name="domain" id="domainSelect"></select>
+          </label>
+          <label><span data-i18n="offerLabel">Ponudba (EUR)</span>
+            <input name="offer" inputmode="numeric" placeholder="1500">
+          </label>
+        </div>
+        <label><span data-i18n="message">Sporočilo (neobvezno)</span>
+          <textarea name="message"></textarea>
+        </label>
+        <button class="submit" type="submit" data-i18n="send">Pošlji ponudbo</button>
+        <p class="note"><span data-i18n="or">Ali pišite neposredno na</span> <a id="mail" href="#"></a></p>
+      </form>
+    </section>
+
+    <section>
+      <h3 data-i18n="others">Na prodaj so tudi te domene</h3>
+      <ul class="domains" id="list"></ul>
+    </section>
+  </main>
+
+  <footer>© <span id="year"></span></footer>
+</div>
+
+<script>
+  // ===== Nastavitve =====
+  // E-naslov, na katerega pridejo ponudbe.
+  const CONTACT_EMAIL = "prodaja@example.com";
+
+  const DOMAINS = [
+    "agentwork.si", "agentworker.si", "modelflow.si", "cloude.si", "agentish.si",
+    "arcee.si", "gritt.si", "ringg.si", "featherless.si", "lyrie.si",
+    "irisgo.si", "overnight.si", "findapp.si", "mindcore.si", "flowhub.si"
+  ];
+  // ======================
+
+  const T = {
+    sl: {
+      tag: "Domena na prodaj",
+      title: d => d + " je naprodaj",
+      lead: "Ta domena je naprodaj. Če vas zanima, nam pošljite ponudbo – odgovorimo v 48 urah.",
+      formTitle: "Pošljite ponudbo",
+      name: "Ime in priimek / podjetje",
+      email: "E-pošta",
+      domainLabel: "Domena",
+      offerLabel: "Ponudba (EUR)",
+      message: "Sporočilo (neobvezno)",
+      send: "Pošlji ponudbo",
+      or: "Ali pišite neposredno na",
+      others: "Na prodaj so tudi te domene",
+      subject: d => "Ponudba za domeno " + d,
+      body: f => `Domena: ${f.domain}\nPonudba: ${f.offer || "-"} EUR\nIme: ${f.name}\nE-pošta: ${f.email}\n\n${f.message}`
+    },
+    en: {
+      tag: "Domain for sale",
+      title: d => d + " is for sale",
+      lead: "This domain is available for purchase. Interested? Send us an offer – we reply within 48 hours.",
+      formTitle: "Make an offer",
+      name: "Name / company",
+      email: "Email",
+      domainLabel: "Domain",
+      offerLabel: "Offer (EUR)",
+      message: "Message (optional)",
+      send: "Send offer",
+      or: "Or email us directly at",
+      others: "These domains are also for sale",
+      subject: d => "Offer for domain " + d,
+      body: f => `Domain: ${f.domain}\nOffer: ${f.offer || "-"} EUR\nName: ${f.name}\nEmail: ${f.email}\n\n${f.message}`
+    }
+  };
+
+  // Katera domena je obiskana: ?d=… (pri preusmeritvi) ali ime gostitelja.
+  function detectDomain() {
+    const p = new URLSearchParams(location.search).get("d");
+    const host = location.hostname.replace(/^www\./, "").toLowerCase();
+    const cand = (p || host).toLowerCase().replace(/^www\./, "");
+    return DOMAINS.includes(cand) ? cand : null;
+  }
+
+  let current = detectDomain();
+  let saved = null;
+  try { saved = localStorage.getItem("lang"); } catch (e) {}
+  let lang = saved || ((navigator.language || "").startsWith("sl") ? "sl" : "en");
+
+  const $ = id => document.getElementById(id);
+
+  function render() {
+    const t = T[lang];
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t[el.dataset.i18n]; });
+    document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === lang));
+
+    const shown = current || DOMAINS[0];
+    $("domain").textContent = current || t.tag;
+    document.title = current ? t.title(current) : t.tag;
+    $("domainSelect").value = shown;
+
+    $("list").innerHTML = "";
+    DOMAINS.forEach(d => {
+      const li = document.createElement("li");
+      const b = document.createElement("button");
+      b.type = "button";
+      b.textContent = d;
+      if (d === current) b.className = "current";
+      b.onclick = () => {
+        current = d;
+        history.replaceState(null, "", "?d=" + d);
+        render();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      };
+      li.appendChild(b);
+      $("list").appendChild(li);
+    });
+
+    const mail = $("mail");
+    mail.textContent = CONTACT_EMAIL;
+    mail.href = "mailto:" + CONTACT_EMAIL + "?subject=" + encodeURIComponent(t.subject(shown));
+  }
+
+  DOMAINS.forEach(d => $("domainSelect").add(new Option(d, d)));
+  $("domainSelect").onchange = e => { current = e.target.value; render(); };
+
+  document.querySelectorAll(".lang button").forEach(b => b.onclick = () => {
+    lang = b.dataset.lang;
+    try { localStorage.setItem("lang", lang); } catch (e) {}
+    render();
+  });
+
+  $("offer").onsubmit = e => {
+    e.preventDefault();
+    const f = Object.fromEntries(new FormData(e.target));
+    const t = T[lang];
+    location.href = "mailto:" + CONTACT_EMAIL +
+      "?subject=" + encodeURIComponent(t.subject(f.domain)) +
+      "&body=" + encodeURIComponent(t.body(f));
+  };
+
+  $("year").textContent = new Date().getFullYear();
+  render();
+</script>
+</body>
+</html>
