@@ -78,6 +78,11 @@
   }
   ul.domains button:hover { border-color: var(--line); }
   ul.domains button.current { background: var(--accent); color: var(--accent-text); }
+  .buy { margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center; }
+  .buy[hidden], .paid[hidden] { display: none; }
+  .price { font-size: 30px; font-weight: 700; letter-spacing: -0.01em; }
+  a.submit { text-decoration: none; display: inline-block; }
+  .paid { background: var(--accent); color: var(--accent-text); border-radius: 12px; padding: 16px 20px; margin: 0 0 24px; }
   footer { margin-top: 56px; font-size: 13px; color: var(--muted); }
 </style>
 </head>
@@ -94,6 +99,15 @@
   <main>
     <h1 id="domain">domena.si</h1>
     <p class="lead" data-i18n="lead">Ta domena je naprodaj. Če vas zanima, nam pošljite ponudbo – odgovorimo v 48 urah.</p>
+
+    <p class="paid" id="paid" hidden data-i18n="paid">Hvala za nakup! V kratkem vas kontaktiramo glede prenosa domene.</p>
+    <section class="card buy" id="buy" hidden>
+      <div>
+        <div class="price" id="price"></div>
+        <p class="note" data-i18n="buyNote">Takojšen nakup s plačilno kartico. Po plačilu vas kontaktiramo in uredimo prenos domene.</p>
+      </div>
+      <a class="submit" id="payBtn" href="#" data-i18n="buyNow">Kupi s kartico</a>
+    </section>
 
     <section class="card">
       <h2 data-i18n="formTitle">Pošljite ponudbo</h2>
@@ -136,11 +150,27 @@
   // E-naslov, na katerega pridejo ponudbe.
   const CONTACT_EMAIL = "info@digihelp.si";
 
+  // price: cena v EUR (null = samo "pošlji ponudbo")
+  // pay:   Stripe Payment Link za kartično plačilo ("" = gumb se ne prikaže)
   const DOMAINS = [
-    "agentwork.si", "agentworker.si", "modelflow.si", "cloude.si", "agentish.si",
-    "arcee.si", "gritt.si", "ringg.si", "featherless.si", "lyrie.si",
-    "irisgo.si", "overnight.si", "findapp.si", "mindcore.si", "flowhub.si"
+    { name: "agentwork.si",    price: 990,  pay: "" },
+    { name: "modelflow.si",    price: 990,  pay: "" },
+    { name: "mindcore.si",     price: 790,  pay: "" },
+    { name: "flowhub.si",      price: 790,  pay: "" },
+    { name: "findapp.si",      price: 590,  pay: "" },
+    { name: "overnight.si",    price: 590,  pay: "" },
+    { name: "agentworker.si",  price: 390,  pay: "" },
+    { name: "agentish.si",     price: 290,  pay: "" },
+    { name: "irisgo.si",       price: 290,  pay: "" },
+    { name: "lyrie.si",        price: 290,  pay: "" },
+    { name: "gritt.si",        price: 190,  pay: "" },
+    { name: "ringg.si",        price: 190,  pay: "" },
+    { name: "cloude.si",       price: null, pay: "" },
+    { name: "arcee.si",        price: null, pay: "" },
+    { name: "featherless.si",  price: null, pay: "" }
   ];
+  const NAMES = DOMAINS.map(d => d.name);
+  const info = n => DOMAINS.find(d => d.name === n);
   // ======================
 
   const T = {
@@ -158,6 +188,10 @@
       or: "Ali pišite neposredno na",
       others: "Na prodaj so tudi te domene",
       broker: "Prodajo ureja",
+      buyNote: "Takojšen nakup s plačilno kartico. Po plačilu vas kontaktiramo in uredimo prenos domene.",
+      buyNow: "Kupi s kartico",
+      paid: "Hvala za nakup! V kratkem vas kontaktiramo glede prenosa domene.",
+      priceText: p => "Cena: " + p.toLocaleString("sl-SI") + " €",
       subject: d => "Ponudba za domeno " + d,
       body: f => `Domena: ${f.domain}\nPonudba: ${f.offer || "-"} EUR\nIme: ${f.name}\nE-pošta: ${f.email}\n\n${f.message}`
     },
@@ -175,6 +209,10 @@
       or: "Or email us directly at",
       others: "These domains are also for sale",
       broker: "Sale handled by",
+      buyNote: "Buy instantly by card. After payment we contact you to transfer the domain.",
+      buyNow: "Buy by card",
+      paid: "Thank you for your purchase! We will contact you shortly about the domain transfer.",
+      priceText: p => "Price: €" + p.toLocaleString("en-GB"),
       subject: d => "Offer for domain " + d,
       body: f => `Domain: ${f.domain}\nOffer: ${f.offer || "-"} EUR\nName: ${f.name}\nEmail: ${f.email}\n\n${f.message}`
     }
@@ -185,7 +223,7 @@
     const p = new URLSearchParams(location.search).get("d");
     const host = location.hostname.replace(/^www\./, "").toLowerCase();
     const cand = (p || host).toLowerCase().replace(/^www\./, "");
-    return DOMAINS.includes(cand) ? cand : null;
+    return NAMES.includes(cand) ? cand : null;
   }
 
   let current = detectDomain();
@@ -201,13 +239,13 @@
     document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t[el.dataset.i18n]; });
     document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === lang));
 
-    const shown = current || DOMAINS[0];
+    const shown = current || NAMES[0];
     $("domain").textContent = current || t.tag;
     document.title = current ? t.title(current) : t.tag;
     $("domainSelect").value = shown;
 
     $("list").innerHTML = "";
-    DOMAINS.forEach(d => {
+    NAMES.forEach(d => {
       const li = document.createElement("li");
       const b = document.createElement("button");
       b.type = "button";
@@ -223,12 +261,17 @@
       $("list").appendChild(li);
     });
 
+    const d = info(shown);
+    $("price").textContent = d.price ? t.priceText(d.price) : "";
+    $("payBtn").href = d.pay || "#";
+    $("buy").hidden = !(current && d.price && d.pay) || !$("paid").hidden;
+
     const mail = $("mail");
     mail.textContent = CONTACT_EMAIL;
     mail.href = "mailto:" + CONTACT_EMAIL + "?subject=" + encodeURIComponent(t.subject(shown));
   }
 
-  DOMAINS.forEach(d => $("domainSelect").add(new Option(d, d)));
+  NAMES.forEach(d => $("domainSelect").add(new Option(d, d)));
   $("domainSelect").onchange = e => { current = e.target.value; render(); };
 
   document.querySelectorAll(".lang button").forEach(b => b.onclick = () => {
@@ -245,6 +288,9 @@
       "?subject=" + encodeURIComponent(t.subject(f.domain)) +
       "&body=" + encodeURIComponent(t.body(f));
   };
+
+  // Stripe po plačilu preusmeri na ?d=<domena>&placano=1
+  if (new URLSearchParams(location.search).has("placano")) $("paid").hidden = false;
 
   $("year").textContent = new Date().getFullYear();
   render();

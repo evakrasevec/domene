@@ -38,6 +38,22 @@ https://<vaš-naslov>/?d=<domena>
 
 npr. `https://<ime>.replit.app/?d=modelflow.si`. Stran bo prikazala `modelflow.si`.
 
+## Cene in kartično plačilo (Stripe)
+
+Cene so v `index.html` v seznamu `DOMAINS` (`price` v EUR). `price: null` pomeni, da je možna samo ponudba.
+
+Gumb »Kupi s kartico« se pri domeni prikaže šele, ko vpišete `pay` povezavo:
+
+1. Ustvarite račun na [stripe.com](https://stripe.com) (podjetje DigiHelp, slovenski TRR).
+2. *Product catalog → Add product*: ime npr. »Domena agentwork.si«, enkratna cena 990 EUR.
+3. *Payment Links → New*: izberite ta izdelek, omejite na 1 nakup (*Limit the number of payments*: 1),
+   dodajte polje za telefon / naslov za račun. Pod *After payment* izberite preusmeritev na
+   `https://agentwork.si/?d=agentwork.si&placano=1`.
+4. Povezavo (`https://buy.stripe.com/...`) prilepite v `pay` pri tej domeni.
+
+Po plačilu dobite e-pošto od Stripa. Kupcu pošljete **kodo za prenos (AuthInfo)** od registrarja
+in mu izstavite račun. Ko je domena prodana, jo odstranite s seznama.
+
 ## Domene
 
 agentwork.si, agentworker.si, modelflow.si, cloude.si, agentish.si, arcee.si, gritt.si, ringg.si, featherless.si, lyrie.si, irisgo.si, overnight.si, findapp.si, mindcore.si, flowhub.si
