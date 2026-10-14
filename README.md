@@ -3,7 +3,7 @@
 Enotna stran za prodajo naših `.si` domen na **https://www.dobava.si**. Vsaka domena ima svojo podstran:
 
 - `https://www.dobava.si/` – seznam vseh domen
-- `https://www.dobava.si/agentwork.si` – stran posamezne domene (ime, cena, obrazec za ponudbo)
+- `https://www.dobava.si/agentwork.si` – stran posamezne domene (ime in obrazec za ponudbo)
 
 Vsako prodajano domeno pri registrarju preusmerite na njeno podstran (glej spodaj).
 Stran je statična (brez strežnika), v slovenščini in angleščini. Ponudbe pridejo po e-pošti.
@@ -14,12 +14,12 @@ V `index.html` na vrhu skripte uredite:
 
 ```js
 const CONTACT_EMAIL = "info@digihelp.si";      // kam pridejo ponudbe
-const DOMAINS = [ ... ];                       // seznam domen
+const DOMAINS = [ ... ];                       // seznam domen (brez cen)
 ```
 
 ## Kako deluje
 
-- `index.html` – celotna stran (seznam domen, cene, obrazec). Nič ni treba gradit.
+- `index.html` – celotna stran (seznam domen, obrazec za ponudbe). Nič ni treba gradit.
 - `vercel.json` – na Vercelu:
   - naslov `/agentwork.si` (in vsaka druga `.si` pot) prikaže `index.html`, stran pa sama prepozna domeno;
   - obisk katerekoli prodajane domene (npr. `agentwork.si` ali `www.agentwork.si`) se samodejno
@@ -52,21 +52,12 @@ prodajane domene preusmeri `vercel.json`.
 Če domene ne želite dodajati na Vercel, lahko namesto tega pri registrarju nastavite preusmeritev (301)
 na `https://www.dobava.si/<domena>`.
 
-## Cene in kartično plačilo (Stripe)
+## Ponudbe
 
-Cene so v `index.html` v seznamu `DOMAINS` (`price` v EUR). `price: null` pomeni, da je možna samo ponudba.
-
-Gumb »Kupi s kartico« se pri domeni prikaže šele, ko vpišete `pay` povezavo:
-
-1. Ustvarite račun na [stripe.com](https://stripe.com).
-2. *Product catalog → Add product*: ime npr. »Domena agentwork.si«, enkratna cena po seznamu.
-3. *Payment Links → New*: izberite ta izdelek, omejite na 1 nakup (*Limit the number of payments*: 1),
-   dodajte polje za telefon / naslov za račun. Pod *After payment* izberite preusmeritev na
-   `https://www.dobava.si/agentwork.si?placano=1`.
-4. Povezavo (`https://buy.stripe.com/...`) prilepite v `pay` pri tej domeni.
-
-Po plačilu dobite e-pošto od Stripa. Kupcu pošljete **kodo za prenos (AuthInfo)** od registrarja
-in mu izstavite račun. Ko je domena prodana, jo odstranite s seznama.
+Cene na strani niso objavljene. Kupci oddajo ponudbo (znesek v EUR) prek obrazca, ki odpre
+e-pošto na `CONTACT_EMAIL`. Ko se dogovorite, kupcu izstavite predračun ali uporabite posrednika
+(npr. Escrow.com), po plačilu pa mu pošljete **kodo za prenos (AuthInfo)** od registrarja.
+Ko je domena prodana, jo odstranite s seznama `DOMAINS`.
 
 ## Domene
 
