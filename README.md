@@ -17,36 +17,40 @@ const CONTACT_EMAIL = "info@digihelp.si";      // kam pridejo ponudbe
 const DOMAINS = [ ... ];                       // seznam domen
 ```
 
-## Podstrani
+## Kako deluje
 
-Za vsako domeno obstaja mapa `<domena>/index.html` (kopija `index.html`), da deluje naslov
-`https://<vaš-naslov>/agentwork.si`. Po vsaki spremembi `index.html` (cene, e-naslov, domene) zaženite:
+- `index.html` – celotna stran (seznam domen, cene, obrazec). Nič ni treba gradit.
+- `vercel.json` – na Vercelu:
+  - naslov `/agentwork.si` (in vsaka druga `.si` pot) prikaže `index.html`, stran pa sama prepozna domeno;
+  - obisk katerekoli prodajane domene (npr. `agentwork.si` ali `www.agentwork.si`) se samodejno
+    preusmeri na `https://www.dobava.si/agentwork.si`.
 
-```
-python3 build.py
-```
+## Objava na Vercelu (GitHub → Vercel)
 
-## Objava na Replitu (www.dobava.si)
+1. Na [vercel.com](https://vercel.com) se prijavite z GitHub računom.
+2. **Add New → Project → Import** repozitorij `evakrasevec/domene`.
+   Framework: **Other**, Build Command in Output Directory pustite prazno → **Deploy**.
+3. Vsak nov `git push` na glavno vejo se samodejno objavi.
 
-1. Na Replitu ustvarite nov Repl z uvozom tega GitHub repozitorija (*Import from GitHub*).
-   Datoteka `.replit` je že pripravljena za **statično objavo** (Static deployment).
-2. Kliknite **Deploy / Publish** → izberite **Static** → objavite.
-3. V nastavitvah objave (*Settings → Link a domain*) dodajte `www.dobava.si` in `dobava.si`.
-   Replit izpiše zapisa **A** in **TXT**, ki ju vpišete v DNS domene dobava.si pri registrarju.
-   Certifikat HTTPS uredi Replit sam.
-4. Če uporabljate Cloudflare, nastavite zapise na »DNS only« (siva oblačka), sicer obnova certifikata lahko ne uspe.
+## Domene na Vercelu
 
-## Preusmeritev prodajanih domen
+V projektu **Settings → Domains** dodajte:
 
-Pri registrarju za vsako domeno nastavite preusmeritev (URL forwarding, **301**) na njeno podstran:
+1. `www.dobava.si` in `dobava.si` (Vercel ponudi preusmeritev `dobava.si` → `www.dobava.si`, sprejmite).
+2. Vse prodajane domene: `agentwork.si`, `modelflow.si`, … (lahko tudi `www.` različice).
 
-| Domena | Preusmeri na |
-|---|---|
-| agentwork.si | https://www.dobava.si/agentwork.si |
-| modelflow.si | https://www.dobava.si/modelflow.si |
-| … | https://www.dobava.si/&lt;domena&gt; |
+Za vsako domeno pri registrarju nastavite DNS, kot ga izpiše Vercel – običajno:
 
-Če registrar ponuja izbiro, vključite preusmeritev tudi za `www.<domena>`.
+| Zapis | Ime | Vrednost |
+|---|---|---|
+| A | `@` | `76.76.21.21` |
+| CNAME | `www` | `cname.vercel-dns.com` |
+
+Certifikate HTTPS uredi Vercel sam. Preusmeritve na registrarju (URL forwarding) **niso potrebne** –
+prodajane domene preusmeri `vercel.json`.
+
+Če domene ne želite dodajati na Vercel, lahko namesto tega pri registrarju nastavite preusmeritev (301)
+na `https://www.dobava.si/<domena>`.
 
 ## Cene in kartično plačilo (Stripe)
 

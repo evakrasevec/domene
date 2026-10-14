@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "(?:www\\.)?(?<d>(?!dobava\\.si$)[a-z0-9-]+\\.si)" }],
+      "destination": "https://www.dobava.si/:d",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    { "source": "/:d([a-z0-9-]+\\.si)", "destination": "/index.html" }
+  ]
+}
