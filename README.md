@@ -7,7 +7,7 @@ Stran sama prepozna, katera domena je bila obiskana, in jo prikaže v naslovu:
 - po imenu gostitelja (če vse domene kažejo na isto gostovanje), ali
 - po parametru `?d=` (če registrar domeno preusmeri, npr. `https://<ime>.replit.app/?d=agentwork.si`).
 
-Prodajo ureja DigiHelp (digihelp.si). Obiskovalec lahko pošlje ponudbo na info@digihelp.si (odpre se e-poštni odjemalec s pripravljenim sporočilom), spodaj pa so navedene vse ostale domene. Stran je v slovenščini in angleščini.
+Obiskovalec lahko pošlje ponudbo na nastavljeni e-naslov (odpre se e-poštni odjemalec s pripravljenim sporočilom), spodaj pa so navedene vse ostale domene. Stran je v slovenščini in angleščini.
 
 ## Nastavitev
 
@@ -29,7 +29,7 @@ const DOMAINS = [ ... ];                       // seznam domen
 4. Če uporabljate Cloudflare, nastavite zapise na »DNS only« (siva oblačka), sicer obnova certifikata lahko ne uspe.
 
 **Če Replit ne dovoli toliko domen na eni objavi** (ali tega ne želite urejati za vsako domeno):
-na Replit povežete samo eno domeno (npr. `domene.digihelp.si` ali `<ime>.replit.app`),
+na Replit povežete samo eno domeno (npr. `<ime>.replit.app`),
 pri registrarju pa za vsako ostalo domeno nastavite preusmeritev (URL forwarding, 301) na:
 
 ```
@@ -44,7 +44,7 @@ Cene so v `index.html` v seznamu `DOMAINS` (`price` v EUR). `price: null` pomeni
 
 Gumb »Kupi s kartico« se pri domeni prikaže šele, ko vpišete `pay` povezavo:
 
-1. Ustvarite račun na [stripe.com](https://stripe.com) (podjetje DigiHelp, slovenski TRR).
+1. Ustvarite račun na [stripe.com](https://stripe.com).
 2. *Product catalog → Add product*: ime npr. »Domena agentwork.si«, enkratna cena 990 EUR.
 3. *Payment Links → New*: izberite ta izdelek, omejite na 1 nakup (*Limit the number of payments*: 1),
    dodajte polje za telefon / naslov za račun. Pod *After payment* izberite preusmeritev na
@@ -56,4 +56,4 @@ in mu izstavite račun. Ko je domena prodana, jo odstranite s seznama.
 
 ## Domene
 
-agentwork.si, agentworker.si, modelflow.si, cloude.si, agentish.si, arcee.si, gritt.si, ringg.si, featherless.si, lyrie.si, irisgo.si, overnight.si, findapp.si, mindcore.si, flowhub.si
+agentwork.si, agentworker.si, modelflow.si, agentish.si, gritt.si, ringg.si, lyrie.si, irisgo.si, overnight.si, findapp.si, mindcore.si, flowhub.si

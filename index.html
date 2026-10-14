@@ -142,7 +142,7 @@
     </section>
   </main>
 
-  <footer><span data-i18n="broker">Prodajo ureja</span> <a href="https://digihelp.si" style="color:inherit">DigiHelp</a> · © <span id="year"></span></footer>
+  <footer>© <span id="year"></span></footer>
 </div>
 
 <script>
@@ -153,21 +153,18 @@
   // price: cena v EUR (null = samo "pošlji ponudbo")
   // pay:   Stripe Payment Link za kartično plačilo ("" = gumb se ne prikaže)
   const DOMAINS = [
-    { name: "agentwork.si",    price: 3900, pay: "" },
-    { name: "modelflow.si",    price: 3900, pay: "" },
-    { name: "mindcore.si",     price: 2900, pay: "" },
-    { name: "flowhub.si",      price: 2900, pay: "" },
-    { name: "findapp.si",      price: 1900, pay: "" },
-    { name: "overnight.si",    price: 1900, pay: "" },
-    { name: "agentworker.si",  price: 1490, pay: "" },
-    { name: "agentish.si",     price: 990, pay: "" },
-    { name: "irisgo.si",       price: 990, pay: "" },
-    { name: "lyrie.si",        price: 990, pay: "" },
-    { name: "gritt.si",        price: 690, pay: "" },
-    { name: "ringg.si",        price: 690, pay: "" },
-    { name: "cloude.si",       price: null, pay: "" },
-    { name: "arcee.si",        price: null, pay: "" },
-    { name: "featherless.si",  price: null, pay: "" }
+    { name: "agentwork.si",    price: 7900, pay: "" },
+    { name: "modelflow.si",    price: 7900, pay: "" },
+    { name: "mindcore.si",     price: 5900, pay: "" },
+    { name: "flowhub.si",      price: 5900, pay: "" },
+    { name: "findapp.si",      price: 3900, pay: "" },
+    { name: "overnight.si",    price: 3900, pay: "" },
+    { name: "agentworker.si",  price: 2900, pay: "" },
+    { name: "agentish.si",     price: 1900, pay: "" },
+    { name: "irisgo.si",       price: 1900, pay: "" },
+    { name: "lyrie.si",        price: 1900, pay: "" },
+    { name: "gritt.si",        price: 1490, pay: "" },
+    { name: "ringg.si",        price: 1490, pay: "" }
   ];
   const NAMES = DOMAINS.map(d => d.name);
   const info = n => DOMAINS.find(d => d.name === n);
@@ -187,7 +184,6 @@
       send: "Pošlji ponudbo",
       or: "Ali pišite neposredno na",
       others: "Na prodaj so tudi te domene",
-      broker: "Prodajo ureja",
       buyNote: "Takojšen nakup s plačilno kartico. Po plačilu vas kontaktiramo in uredimo prenos domene.",
       buyNow: "Kupi s kartico",
       paid: "Hvala za nakup! V kratkem vas kontaktiramo glede prenosa domene.",
@@ -208,7 +204,6 @@
       send: "Send offer",
       or: "Or email us directly at",
       others: "These domains are also for sale",
-      broker: "Sale handled by",
       buyNote: "Buy instantly by card. After payment we contact you to transfer the domain.",
       buyNow: "Buy by card",
       paid: "Thank you for your purchase! We will contact you shortly about the domain transfer.",
