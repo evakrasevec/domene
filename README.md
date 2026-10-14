@@ -1,14 +1,12 @@
-# Domene na prodaj
+# Domene na prodaj – dobava.si
 
-Enotna stran »domena na prodaj« za vse naše `.si` domene. Ena sama statična datoteka (`index.html`), brez strežnika.
+Enotna stran za prodajo naših `.si` domen na **https://www.dobava.si**. Vsaka domena ima svojo podstran:
 
-Stran sama prepozna, katera domena je bila obiskana, in jo prikaže v naslovu:
+- `https://www.dobava.si/` – seznam vseh domen
+- `https://www.dobava.si/agentwork.si` – stran posamezne domene (ime, cena, obrazec za ponudbo)
 
-- po poti, npr. `https://<vaš-naslov>/agentwork.si` (vsaka domena ima svojo podstran),
-- po imenu gostitelja (če vse domene kažejo na isto gostovanje), ali
-- po parametru `?d=` (če registrar domeno preusmeri, npr. `https://<ime>.replit.app/?d=agentwork.si`).
-
-Obiskovalec lahko pošlje ponudbo na nastavljeni e-naslov (odpre se e-poštni odjemalec s pripravljenim sporočilom), spodaj pa so navedene vse ostale domene. Stran je v slovenščini in angleščini.
+Vsako prodajano domeno pri registrarju preusmerite na njeno podstran (glej spodaj).
+Stran je statična (brez strežnika), v slovenščini in angleščini. Ponudbe pridejo po e-pošti.
 
 ## Nastavitev
 
@@ -28,25 +26,27 @@ Za vsako domeno obstaja mapa `<domena>/index.html` (kopija `index.html`), da del
 python3 build.py
 ```
 
-## Objava na Replitu
+## Objava na Replitu (www.dobava.si)
 
 1. Na Replitu ustvarite nov Repl z uvozom tega GitHub repozitorija (*Import from GitHub*).
    Datoteka `.replit` je že pripravljena za **statično objavo** (Static deployment).
-2. Kliknite **Deploy / Publish** → izberite **Static** → objavite. Stran dobi naslov `https://<ime>.replit.app`.
-3. V nastavitvah objave (*Settings → Link a domain*) dodajte domeno, npr. `agentwork.si`.
-   Replit izpiše zapisa **A** in **TXT**, ki ju vpišete v DNS pri registrarju. Certifikat HTTPS uredi Replit sam.
-   Ponovite za vsako domeno. Stran po imenu gostitelja sama prikaže pravo domeno.
+2. Kliknite **Deploy / Publish** → izberite **Static** → objavite.
+3. V nastavitvah objave (*Settings → Link a domain*) dodajte `www.dobava.si` in `dobava.si`.
+   Replit izpiše zapisa **A** in **TXT**, ki ju vpišete v DNS domene dobava.si pri registrarju.
+   Certifikat HTTPS uredi Replit sam.
 4. Če uporabljate Cloudflare, nastavite zapise na »DNS only« (siva oblačka), sicer obnova certifikata lahko ne uspe.
 
-**Če Replit ne dovoli toliko domen na eni objavi** (ali tega ne želite urejati za vsako domeno):
-na Replit povežete samo eno domeno (npr. `<ime>.replit.app`),
-pri registrarju pa za vsako ostalo domeno nastavite preusmeritev (URL forwarding, 301) na:
+## Preusmeritev prodajanih domen
 
-```
-https://<vaš-naslov>/<domena>
-```
+Pri registrarju za vsako domeno nastavite preusmeritev (URL forwarding, **301**) na njeno podstran:
 
-npr. `https://<ime>.replit.app/modelflow.si`. Stran bo prikazala `modelflow.si`.
+| Domena | Preusmeri na |
+|---|---|
+| agentwork.si | https://www.dobava.si/agentwork.si |
+| modelflow.si | https://www.dobava.si/modelflow.si |
+| … | https://www.dobava.si/&lt;domena&gt; |
+
+Če registrar ponuja izbiro, vključite preusmeritev tudi za `www.<domena>`.
 
 ## Cene in kartično plačilo (Stripe)
 
@@ -55,10 +55,10 @@ Cene so v `index.html` v seznamu `DOMAINS` (`price` v EUR). `price: null` pomeni
 Gumb »Kupi s kartico« se pri domeni prikaže šele, ko vpišete `pay` povezavo:
 
 1. Ustvarite račun na [stripe.com](https://stripe.com).
-2. *Product catalog → Add product*: ime npr. »Domena agentwork.si«, enkratna cena 990 EUR.
+2. *Product catalog → Add product*: ime npr. »Domena agentwork.si«, enkratna cena po seznamu.
 3. *Payment Links → New*: izberite ta izdelek, omejite na 1 nakup (*Limit the number of payments*: 1),
    dodajte polje za telefon / naslov za račun. Pod *After payment* izberite preusmeritev na
-   `https://agentwork.si/?d=agentwork.si&placano=1`.
+   `https://www.dobava.si/agentwork.si?placano=1`.
 4. Povezavo (`https://buy.stripe.com/...`) prilepite v `pay` pri tej domeni.
 
 Po plačilu dobite e-pošto od Stripa. Kupcu pošljete **kodo za prenos (AuthInfo)** od registrarja
