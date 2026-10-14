@@ -128,13 +128,13 @@
     </section>
   </main>
 
-  <footer>© <span id="year"></span></footer>
+  <footer><span data-i18n="broker">Prodajo ureja</span> <a href="https://digihelp.si" style="color:inherit">DigiHelp</a> · © <span id="year"></span></footer>
 </div>
 
 <script>
   // ===== Nastavitve =====
   // E-naslov, na katerega pridejo ponudbe.
-  const CONTACT_EMAIL = "prodaja@example.com";
+  const CONTACT_EMAIL = "info@digihelp.si";
 
   const DOMAINS = [
     "agentwork.si", "agentworker.si", "modelflow.si", "cloude.si", "agentish.si",
@@ -157,6 +157,7 @@
       send: "Pošlji ponudbo",
       or: "Ali pišite neposredno na",
       others: "Na prodaj so tudi te domene",
+      broker: "Prodajo ureja",
       subject: d => "Ponudba za domeno " + d,
       body: f => `Domena: ${f.domain}\nPonudba: ${f.offer || "-"} EUR\nIme: ${f.name}\nE-pošta: ${f.email}\n\n${f.message}`
     },
@@ -173,6 +174,7 @@
       send: "Send offer",
       or: "Or email us directly at",
       others: "These domains are also for sale",
+      broker: "Sale handled by",
       subject: d => "Offer for domain " + d,
       body: f => `Domain: ${f.domain}\nOffer: ${f.offer || "-"} EUR\nName: ${f.name}\nEmail: ${f.email}\n\n${f.message}`
     }

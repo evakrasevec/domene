@@ -7,14 +7,14 @@ Stran sama prepozna, katera domena je bila obiskana, in jo prikaže v naslovu:
 - po imenu gostitelja (če vse domene kažejo na isto gostovanje), ali
 - po parametru `?d=` (če registrar domeno preusmeri, npr. `https://hub.example/?d=agentwork.si`).
 
-Obiskovalec lahko pošlje ponudbo (odpre se e-poštni odjemalec s pripravljenim sporočilom), spodaj pa so navedene vse ostale domene. Stran je v slovenščini in angleščini.
+Prodajo ureja DigiHelp (digihelp.si). Obiskovalec lahko pošlje ponudbo na info@digihelp.si (odpre se e-poštni odjemalec s pripravljenim sporočilom), spodaj pa so navedene vse ostale domene. Stran je v slovenščini in angleščini.
 
 ## Nastavitev
 
 V `index.html` na vrhu skripte uredite:
 
 ```js
-const CONTACT_EMAIL = "prodaja@example.com";   // vaš e-naslov
+const CONTACT_EMAIL = "info@digihelp.si";      // kam pridejo ponudbe
 const DOMAINS = [ ... ];                       // seznam domen
 ```
 
