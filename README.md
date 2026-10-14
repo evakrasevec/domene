@@ -2,11 +2,12 @@
 
 Enotna stran za prodajo naših `.si` domen na **https://www.dobava.si**. Vsaka domena ima svojo podstran:
 
-- `https://www.dobava.si/` – seznam vseh domen
-- `https://www.dobava.si/agentwork.si` – stran posamezne domene (ime in obrazec za ponudbo)
+- `https://www.dobava.si/` – kolekcija vseh domen (filtri, iskanje, izbor več domen za skupno povpraševanje)
+- `https://www.dobava.si/agentwork.si` – stran posamezne domene (opis, »Make an offer«, »Add to selection«)
+- razdelek »How it works« – nakup prek Escrow.com v 4 korakih
 
-Vsako prodajano domeno pri registrarju preusmerite na njeno podstran (glej spodaj).
-Stran je statična (brez strežnika), v slovenščini in angleščini. Ponudbe pridejo po e-pošti.
+Stran je v angleščini, statična (brez strežnika). Cene niso objavljene, kupci oddajo ponudbo,
+ki se odpre kot e-pošta na `CONTACT_EMAIL`.
 
 ## Nastavitev
 
@@ -14,7 +15,11 @@ V `index.html` na vrhu skripte uredite:
 
 ```js
 const CONTACT_EMAIL = "info@digihelp.si";      // kam pridejo ponudbe
-const DOMAINS = [ ... ];                       // seznam domen (brez cen)
+const DOMAINS = [                              // seznam domen
+  { name: "agentwork.si", cat: "ai", desc: "Opis v angleščini …" },
+  …
+];
+// cat: "ai" (AI & agents), "word" (Words), "brand" (Brandable)
 ```
 
 ## Kako deluje
